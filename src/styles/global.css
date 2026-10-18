@@ -1,0 +1,235 @@
+/* ============ 主题变量：三端统一（Windows WebView2 / Linux WebKitGTK / Android WebView） ============ */
+:root {
+  --qb-bg: #f4f6fa;
+  --qb-bg-elevated: #ffffff;
+  --qb-border: #e4e8ef;
+  --qb-text: #1b2330;
+  --qb-text-secondary: #667085;
+  --qb-up: #e5484d;
+  --qb-down: #12a150;
+  --qb-sider-bg: #ffffff;
+  --qb-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --qb-nav-height: 56px;
+  --qb-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --qb-safe-top: env(safe-area-inset-top, 0px);
+}
+
+html[data-theme='dark'] {
+  --qb-bg: #0f1419;
+  --qb-bg-elevated: #171d26;
+  --qb-border: #232b37;
+  --qb-text: #e6edf5;
+  --qb-text-secondary: #8b98a9;
+  --qb-up: #ff6b6b;
+  --qb-down: #2fce89;
+  --qb-sider-bg: #131a23;
+  --qb-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--qb-bg);
+  color: var(--qb-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+/* 移动端禁止长按选中拖拽干扰 */
+body.qb-mobile {
+  user-select: none;
+}
+
+/* ============ 应用外壳 ============ */
+.qb-shell {
+  min-height: 100%;
+  background: var(--qb-bg);
+}
+
+.qb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 20px 14px;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.4px;
+  color: var(--qb-text);
+}
+
+.qb-brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1677ff, #6f4ef2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.qb-brand-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--qb-text-secondary);
+  letter-spacing: 0;
+}
+
+/* ============ 桌面端顶部信息条 ============ */
+.qb-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: var(--qb-nav-height);
+  padding: 0 20px;
+  background: var(--qb-bg-elevated);
+  border-bottom: 1px solid var(--qb-border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.qb-topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--qb-text);
+}
+
+.qb-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============ 内容区 ============ */
+.qb-content {
+  padding: 20px;
+  min-height: calc(100vh - var(--qb-nav-height));
+}
+
+/* ============ 移动端布局 ============ */
+.qb-mobile .qb-content {
+  padding: 12px 12px calc(64px + var(--qb-safe-bottom) + 12px);
+}
+
+.qb-mobile-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(var(--qb-nav-height) + var(--qb-safe-top));
+  padding: var(--qb-safe-top) 14px 0;
+  background: var(--qb-bg-elevated);
+  border-bottom: 1px solid var(--qb-border);
+}
+
+.qb-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  background: var(--qb-bg-elevated);
+  border-top: 1px solid var(--qb-border);
+  padding-bottom: var(--qb-safe-bottom);
+}
+
+.qb-bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 56px;
+  border: none;
+  background: transparent;
+  color: var(--qb-text-secondary);
+  font-size: 10px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.qb-bottom-nav-item .anticon {
+  font-size: 18px;
+}
+
+.qb-bottom-nav-item.is-active {
+  color: #1677ff;
+}
+
+/* ============ 通用卡片 ============ */
+.qb-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.qb-mono {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.qb-num-up {
+  color: var(--qb-up);
+}
+
+.qb-num-down {
+  color: var(--qb-down);
+}
+
+/* ============ 占位提示 ============ */
+.qb-roadmap {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--qb-text-secondary);
+  line-height: 2;
+}
+
+.qb-tree {
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--qb-bg);
+  border: 1px solid var(--qb-border);
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--qb-text-secondary);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* 滚动条（WebKit 内核三端通用） */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--qb-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}

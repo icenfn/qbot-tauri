@@ -1,0 +1,49 @@
+{
+  "name": "qbot-tauri",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Qbot for A-share & Fund, cross-platform (Linux / Windows / Android) built with Tauri 2",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:only": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "tauri": "tauri",
+    "app:dev": "tauri dev",
+    "app:build": "tauri build",
+    "android:init": "tauri android init",
+    "android:dev": "tauri android dev",
+    "android:build": "tauri android build",
+    "backend:install": "pip install -r backend/requirements.txt",
+    "backend:dev": "python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 --app-dir backend"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.5.2",
+    "@tauri-apps/api": "^2.1.1",
+    "@tauri-apps/plugin-dialog": "^2.2.0",
+    "@tauri-apps/plugin-fs": "^2.2.0",
+    "@tauri-apps/plugin-http": "^2.2.0",
+    "@tauri-apps/plugin-notification": "^2.2.0",
+    "@tauri-apps/plugin-opener": "^2.2.5",
+    "@tauri-apps/plugin-sql": "^2.2.0",
+    "@tauri-apps/plugin-store": "^2.2.0",
+    "antd": "^5.22.5",
+    "dayjs": "^1.11.13",
+    "echarts": "^5.5.1",
+    "echarts-for-react": "^3.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.3"
+  }
+}

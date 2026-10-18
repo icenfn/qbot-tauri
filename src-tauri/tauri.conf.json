@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Qbot",
+  "version": "0.1.0",
+  "identifier": "com.qbot.workbench",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Qbot · 量化投资工作台",
+        "width": 1360,
+        "height": 880,
+        "minWidth": 960,
+        "minHeight": 640,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "decorations": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' asset: http://asset.localhost data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' ipc: http://ipc.localhost http://* https://* ws://* wss://*; font-src 'self' data:; frame-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png",
+      "icons/icon.ico"
+    ],
+    "category": "Finance",
+    "shortDescription": "A股与基金量化工作台",
+    "longDescription": "Qbot 是面向国内市场 A 股与基金的跨平台量化投资工作台，支持行情、自选、策略回测、交易与风控，一套代码交付 Linux / Windows / Android 三端。",
+    "copyright": "MIT License",
+    "publisher": "Qbot Contributors",
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    },
+    "android": {
+      "minSdkVersion": 24
+    }
+  },
+  "plugins": {}
+}
