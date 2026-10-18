@@ -1,11 +1,11 @@
-"""场外基金路由：名录、净值序列。"""
+"""场外基金路由：名录、净值序列、基金详情。"""
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Path, Query
 
 from app.api.deps import to_http_error
-from app.schemas import FundInfo, FundNavResponse
+from app.schemas import FundDetail, FundInfo, FundNavResponse
 from app.services import akshare_service as svc
 
 router = APIRouter(prefix="/funds", tags=["funds"])
@@ -34,3 +34,14 @@ def get_fund_nav(
     except svc.DataSourceError as exc:
         raise to_http_error(exc) from exc
     return FundNavResponse(**payload)
+
+
+@router.get("/{code}/detail", response_model=FundDetail, summary="基金详情（含净值序列）")
+def get_fund_detail(
+    code: str = Path(description="基金代码，如 110022"),
+) -> FundDetail:
+    try:
+        payload = svc.fetch_fund_detail(code)
+    except svc.DataSourceError as exc:
+        raise to_http_error(exc) from exc
+    return FundDetail(**payload)

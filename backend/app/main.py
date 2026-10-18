@@ -15,6 +15,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import api_router
+from app.core.cache import cache
 from app.core.config import settings
 from app.schemas import HealthResponse
 from app.services import akshare_service as svc
@@ -53,6 +54,7 @@ def health() -> HealthResponse:
         version=settings.version,
         akshare_available=version is not None,
         akshare_version=version,
+        cache_entries=cache.stats()["entries"],
         time=datetime.now().isoformat(timespec="seconds"),
     )
 

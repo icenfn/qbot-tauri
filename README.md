@@ -54,9 +54,12 @@
 qbot-tauri/
 ├── src/                        # 前端（React + TS + Vite）
 │   ├── layouts/AppLayout.tsx   # 响应式外壳：桌面侧边栏 / 移动底部导航
-│   ├── pages/                  # 工作台、行情、回测、交易、基金、设置
+│   ├── pages/                  # 工作台、行情、个股详情、回测、交易、基金、基金详情、设置
+│   ├── components/             # K线图、净值图、涨跌文本
+│   ├── hooks/                  # 平台探测、轮询
 │   ├── lib/api/                # 后端客户端（client/types/endpoints）
 │   ├── lib/db/                 # SQLite 访问层（自选、缓存、交易日志）
+│   ├── lib/format.ts           # 价格/涨跌/金额格式化
 │   ├── lib/tauri/              # 运行环境探测与命令调用封装
 │   ├── stores/                 # zustand：主题、设置
 │   └── styles/global.css       # 主题变量与布局
@@ -71,7 +74,8 @@ qbot-tauri/
     └── app/
         ├── main.py             # 应用入口 + /health
         ├── schemas.py          # Pydantic 响应模型
-        ├── api/v1/             # stocks / funds 路由
+        ├── core/cache.py       # 进程内 TTL 缓存（行情/名录/K线）
+        ├── api/v1/             # market / stocks / funds 路由
         └── services/akshare_service.py
 ```
 
@@ -161,9 +165,9 @@ npm run android:build -- --apk       # Android APK
 
 ## 七、后续阶段
 
-| 阶段 | 内容 |
-|------|------|
-| 第二阶段 · 数据中心 | 行情看板（实时轮询）、K线/净值图、指标叠加、自选自动补全名称 |
+| 阶段 | 内容 | 状态 |
+|------|------|------|
+| 第二阶段 · 数据中心 | 行情看板（实时轮询）、K线/净值图、个股与基金详情、自选自动补全名称 | ✅ 已完成 |
 | 第三阶段 · 策略与回测 | 30+ 指标库、6 个 A股策略 + 5 个基金策略、事件驱动回测引擎、绩效报告、参数优化 |
 | 第四阶段 · 基金/实盘/风控 | 基金筛选与组合分析、交易网关对接、条件单、风控前置、本地通知 |
 | 第五阶段 · 优化完善 | 性能、体验、交易日志界面、行情自动更新 |

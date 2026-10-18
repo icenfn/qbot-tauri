@@ -1,11 +1,11 @@
-"""A 股行情与 K 线路由。仅覆盖国内市场，不包含港美股与加密货币。"""
+"""A 股行情、K 线与个股资料路由。仅覆盖国内市场，不包含港美股与加密货币。"""
 
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, HTTPException, Path, Query, status
 
 from app.api.deps import to_http_error
-from app.schemas import KlineResponse, Quote, StockInfo
+from app.schemas import KlineResponse, Quote, StockInfo, StockProfile
 from app.services import akshare_service as svc
 
 router = APIRouter(prefix="/stocks", tags=["stocks"])
@@ -61,3 +61,14 @@ def get_kline(
         raise to_http_error(exc) from exc
 
     return KlineResponse(symbol=symbol, period=period, adjust=adjust, bars=bars)  # type: ignore[arg-type]
+
+
+@router.get("/{symbol}/profile", response_model=StockProfile, summary="个股基本信息")
+def get_stock_profile(
+    symbol: str = Path(description="股票代码，如 600519"),
+) -> StockProfile:
+    try:
+        payload = svc.fetch_stock_profile(symbol)
+    except svc.DataSourceError as exc:
+        raise to_http_error(exc) from exc
+    return StockProfile(**payload)
