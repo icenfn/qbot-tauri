@@ -8,6 +8,7 @@
 
 mod commands;
 mod migrations;
+mod quant;
 
 use tauri::Manager;
 
@@ -46,6 +47,12 @@ pub fn run() {
             commands::system_info,
             commands::app_ping,
             commands::open_data_dir,
+            // 第三阶段：量化核心（指标 / 策略 / 回测 / 参数优化）
+            quant::commands::list_strategies,
+            quant::commands::strategy_signals,
+            quant::commands::run_backtest,
+            quant::commands::optimize_params,
+            quant::commands::compute_indicator,
         ]);
 
     builder

@@ -1,0 +1,14 @@
+[package]
+name = "qbot-core"
+version = "0.1.0"
+edition = "2021"
+description = "Qbot 量化核心：技术指标、策略、事件驱动回测、绩效分析（纯 std，无外部依赖）"
+license = "MIT"
+
+# 独立包：不加入 src-tauri 的 workspace，便于 `cargo test` 秒级验证
+[workspace]
+
+[dependencies]
+
+[profile.test]
+opt-level = 1

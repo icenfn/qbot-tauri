@@ -25,6 +25,8 @@ tauri-plugin-dialog = "2"
 tauri-plugin-notification = "2"
 # 走 Rust 侧 reqwest 发起 HTTP，绕开 WebView 的 CORS / 明文流量限制
 tauri-plugin-http = "2"
+# 量化核心：纯 std 实现，三端原生编译（指标/策略/回测/绩效）
+qbot-core = { path = "../core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 chrono = { version = "0.4", features = ["serde"] }
