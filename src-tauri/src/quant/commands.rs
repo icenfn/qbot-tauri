@@ -12,16 +12,19 @@ use qbot_core::optimizer::{self, Objective, ParamGrid};
 use qbot_core::strategies;
 use qbot_core::types::{BacktestConfig, Bar, Params, Signal};
 
-use crate::quant::{
-    metrics_to_dto, point_to_dto, trade_to_dto, BarInput, ConfigInput, GridInput,
-    OptimizeReportDto, CandidateDto, BacktestResultDto, StrategyMetaDto,
-};
 use crate::quant::{closed_to_dto, meta_to_dto};
+use crate::quant::{
+    metrics_to_dto, point_to_dto, trade_to_dto, BacktestResultDto, BarInput, CandidateDto,
+    ConfigInput, GridInput, OptimizeReportDto, StrategyMetaDto,
+};
 
 /// 列出全部策略及其参数规格，供前端渲染策略选择与参数表单。
 #[tauri::command]
 pub fn list_strategies() -> Vec<StrategyMetaDto> {
-    strategies::registry().into_iter().map(meta_to_dto).collect()
+    strategies::registry()
+        .into_iter()
+        .map(meta_to_dto)
+        .collect()
 }
 
 /// 只计算策略信号，用于在 K 线图上叠加买卖点。
@@ -89,7 +92,11 @@ fn to_dto(
         initial_cash: result.initial_cash,
         final_equity: result.final_equity,
         trades: result.trades.into_iter().map(trade_to_dto).collect(),
-        closed_trades: result.closed_trades.into_iter().map(closed_to_dto).collect(),
+        closed_trades: result
+            .closed_trades
+            .into_iter()
+            .map(closed_to_dto)
+            .collect(),
         equityCurve: result.equity_curve.into_iter().map(point_to_dto).collect(),
         metrics: metrics_to_dto(result.metrics),
     })
@@ -109,7 +116,13 @@ pub async fn run_backtest(
     let core_config = config.merge(BacktestConfig::default());
 
     tauri::async_runtime::spawn_blocking(move || {
-        to_dto(&symbol, &strategy_id, &core_bars, &core_params, &core_config)
+        to_dto(
+            &symbol,
+            &strategy_id,
+            &core_bars,
+            &core_params,
+            &core_config,
+        )
     })
     .await
     .map_err(|e| format!("回测任务执行失败：{e}"))?
@@ -131,7 +144,10 @@ pub async fn optimize_params(
     let core_config = config.merge(BacktestConfig::default());
     let core_grid: Vec<ParamGrid> = grid
         .into_iter()
-        .map(|g| ParamGrid { key: g.key, values: g.values })
+        .map(|g| ParamGrid {
+            key: g.key,
+            values: g.values,
+        })
         .collect();
     let obj = Objective::from_str(&objective);
     let keep = keep.unwrap_or(10).clamp(1, 50);
@@ -248,7 +264,14 @@ mod tests {
     #[test]
     fn to_dto_curve_aligned() {
         let b = bars(150);
-        let out = to_dto("600519", "dual_ma", &b, &Params::new(), &BacktestConfig::default()).unwrap();
+        let out = to_dto(
+            "600519",
+            "dual_ma",
+            &b,
+            &Params::new(),
+            &BacktestConfig::default(),
+        )
+        .unwrap();
         assert_eq!(out.equityCurve.len(), 150);
         assert_eq!(out.bars, 150);
     }

@@ -7,6 +7,8 @@
 //! - 不做网络请求、不读数据库，输入输出都是普通 Rust 结构体，边界清晰。
 
 pub mod backtest;
+pub mod conditional;
+pub mod risk;
 pub mod indicators;
 pub mod metrics;
 pub mod optimizer;

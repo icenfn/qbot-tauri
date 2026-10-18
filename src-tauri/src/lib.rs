@@ -9,6 +9,7 @@
 mod commands;
 mod migrations;
 mod quant;
+mod trade;
 
 use tauri::Manager;
 
@@ -53,6 +54,17 @@ pub fn run() {
             quant::commands::run_backtest,
             quant::commands::optimize_params,
             quant::commands::compute_indicator,
+            // 第四阶段：交易与风控（网关配置 / 快照 / 风控预检 / 下单撤单 / 条件单）
+            trade::commands::trade_get_config,
+            trade::commands::trade_save_config,
+            trade::commands::trade_health,
+            trade::commands::trade_snapshot,
+            trade::commands::trade_precheck,
+            trade::commands::trade_place_order,
+            trade::commands::trade_cancel_order,
+            trade::commands::trade_open_orders,
+            trade::commands::trade_validate_conditional,
+            trade::commands::trade_check_conditionals,
         ]);
 
     builder

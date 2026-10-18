@@ -1,0 +1,34 @@
+[package]
+name = "qbot-gateway"
+version = "0.1.0"
+edition = "2021"
+description = "Qbot 交易网关客户端：REST 契约、账户持仓同步、下单撤单、条件单编排（不依赖 Tauri）"
+license = "MIT"
+
+# 独立包：与 qbot-core 一样不加入 src-tauri 的 workspace，
+# 便于在无 GTK/WebKit 的机器上用 `cargo test` 验证契约与风控编排
+[workspace]
+
+[dependencies]
+qbot-core = { path = "../core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde"] }
+# 只启用 rustls，避免依赖系统 OpenSSL，三端（含 Android）交叉编译更省事
+reqwest = { version = "0.12", default-features = false, features = [
+    "json",
+    "rustls-tls",
+    "charset",
+    "http2",
+] }
+
+# 关闭调试符号：本 crate 的依赖（reqwest/tokio/rustls）体积较大，
+# 调试信息对「跑通契约与风控单测」没有价值，关掉可显著缩小 target 目录
+[profile.dev]
+debug = false
+incremental = false
+
+[profile.test]
+opt-level = 1
+debug = false
+incremental = false

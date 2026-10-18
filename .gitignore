@@ -42,6 +42,8 @@ Thumbs.db
 data/cache/
 
 # --- local sandbox deps (not part of source) ---
+.npmrc
+
 .npm-cache/
 .pydeps/
 dist/

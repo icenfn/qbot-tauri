@@ -31,5 +31,11 @@ pub fn all() -> Vec<Migration> {
             sql: include_str!("../migrations/0004_app_meta.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 5,
+            description: "create_trading_ledger",
+            sql: include_str!("../migrations/0005_trading.sql"),
+            kind: MigrationKind::Up,
+        },
     ]
 }

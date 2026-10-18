@@ -27,6 +27,8 @@ tauri-plugin-notification = "2"
 tauri-plugin-http = "2"
 # 量化核心：纯 std 实现，三端原生编译（指标/策略/回测/绩效）
 qbot-core = { path = "../core" }
+# 交易网关客户端：同样不依赖 Tauri，便于独立测试
+qbot-gateway = { path = "../gateway" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 chrono = { version = "0.4", features = ["serde"] }
