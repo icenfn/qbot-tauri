@@ -37,5 +37,11 @@ pub fn all() -> Vec<Migration> {
             sql: include_str!("../migrations/0005_trading.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 6,
+            description: "add_perf_indexes",
+            sql: include_str!("../migrations/0006_perf_index.sql"),
+            kind: MigrationKind::Up,
+        },
     ]
 }

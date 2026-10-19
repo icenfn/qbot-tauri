@@ -54,6 +54,7 @@ import {
 import type { ColumnsType } from 'antd/es/table'
 import { usePlatform } from '@/hooks/usePlatform'
 import { isTauri } from '@/lib/tauri/env'
+import { useSettingsStore } from '@/stores/settings'
 import { formatAmount, formatPrice } from '@/lib/format'
 import {
   cancelOrder,
@@ -269,6 +270,8 @@ export default function TradePage() {
   const [logFilter, setLogFilter] = useState('')
 
   const tauriReady = isTauri()
+  // 条件单轮询间隔由设置页控制：手机端常设 30/60 秒以省电，桌面端可设 5-15 秒更及时
+  const tradePollMs = useSettingsStore((s) => s.tradePollMs)
   // 用 ref 保存最新配置，供定时器读取，避免把整个页面的 effect 依赖链拖长
   const configRef = useRef(config)
   configRef.current = config
@@ -370,6 +373,7 @@ export default function TradePage() {
         for (const r of results) {
           if (r.state === 'armed' && !r.triggered) continue
           changed = true
+          const item = payload.find((p) => p.id === r.id)
           await updateConditionalState(r.id, r.state, r.firedToday, r.message)
           if (r.triggered) {
             message.info(`条件单 ${r.symbol} 已触发：${r.message}`)
@@ -383,11 +387,10 @@ export default function TradePage() {
               symbol: r.symbol,
               name: '',
               side: payload.find((p) => p.id === r.id)?.side ?? 'sell',
-              orderType: 'limit',
-              price: r.risk?.amount && payload.find((p) => p.id === r.id)?.volume
-                ? (r.risk?.amount ?? 0) / (payload.find((p) => p.id === r.id)?.volume || 1)
-                : 0,
-              volume: payload.find((p) => p.id === r.id)?.volume ?? 0,
+              orderType: item?.orderType ?? 'market',
+              // 优先用条件单自身的限价；市价单则用风控算出的实际金额反推均价
+              price: item?.limitPrice ?? (r.risk && item?.volume ? r.risk.amount / item.volume : 0),
+              volume: item?.volume ?? 0,
               amount: r.risk?.amount ?? 0,
               status: r.state === 'filled' ? 'submitted' : 'rejected',
               source: 'conditional',
@@ -408,17 +411,27 @@ export default function TradePage() {
       }
     }
 
+    // 先在切换页面/重新配置时立即评估一次，再按设置间隔轮询。
+    // 间隔设为 0 表示用户关掉了自动轮询，此时只做这一次，避免静默消耗流量。
     void tick()
+    if (tradePollMs <= 0) {
+      return () => {
+        alive = false
+      }
+    }
+
     const timer = setInterval(() => {
+      // 页面不可见时不评估：条件单以「跨越」语义判定，回到前台会立即补一次，
+      // 因此跳过不会漏触发，只会在极端行情下让触发点稍晚一点。
       if (typeof document !== 'undefined' && document.hidden) return
       void tick()
-    }, 15_000)
+    }, tradePollMs)
 
     return () => {
       alive = false
       clearInterval(timer)
     }
-  }, [tauriReady, configured, loadConditionals, loadOrders])
+  }, [tauriReady, configured, tradePollMs, loadConditionals, loadOrders])
 
   // -------------------------------------------------------------------------
   // 操作

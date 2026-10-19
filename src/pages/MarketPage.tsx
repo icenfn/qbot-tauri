@@ -36,6 +36,7 @@ import { api } from '@/lib/api/endpoints'
 import type { Quote, SearchResult, SymbolKind } from '@/lib/api/types'
 import { usePlatform } from '@/hooks/usePlatform'
 import { usePolling } from '@/hooks/usePolling'
+import { useSettingsStore } from '@/stores/settings'
 import ChangeText from '@/components/ChangeText'
 import { formatAmount, formatPrice, formatVolume, changeColor } from '@/lib/format'
 
@@ -53,15 +54,30 @@ interface FundSnapshot {
   dailyReturn: number | null
 }
 
-/** 轮询间隔：交易时段 10 秒，其余时间拉长到 60 秒，降低数据源压力 */
-function pollInterval(): number {
+/** 当前是否处于 A 股连续竞价时段（含 9:15 集合竞价） */
+function inTradingSession(): boolean {
   const now = new Date()
   const day = now.getDay()
   const minutes = now.getHours() * 60 + now.getMinutes()
   const isTradingDay = day >= 1 && day <= 5
-  const inSession = (minutes >= 9 * 60 + 15 && minutes <= 11 * 60 + 30) ||
+  const inSession =
+    (minutes >= 9 * 60 + 15 && minutes <= 11 * 60 + 30) ||
     (minutes >= 13 * 60 && minutes <= 15 * 60 + 5)
-  return isTradingDay && inSession ? 10000 : 60000
+  return isTradingDay && inSession
+}
+
+/**
+ * 实际轮询间隔。
+ *
+ * 用户在设置页配置的是「交易时段内的间隔」；非交易时段行情根本不变化，
+ * 按同一频率刷只是白耗流量与电（移动端尤其明显），因此自动放宽到 60 秒，
+ * 但不超过用户配置值 —— 用户若设了 30 秒，非交易时段也不会比 30 秒更频繁。
+ * 配置为 0 表示关闭自动刷新，此时返回 0，usePolling 只拉一次。
+ */
+function effectiveInterval(configuredMs: number): number {
+  if (configuredMs <= 0) return 0
+  if (inTradingSession()) return configuredMs
+  return Math.max(configuredMs, 60000)
 }
 
 export default function MarketPage() {
@@ -105,7 +121,8 @@ export default function MarketPage() {
   const symbolsKey = stockSymbols.join(',')
   const fundsKey = fundCodes.join(',')
 
-  const interval = pollInterval()
+  const quoteRefreshMs = useSettingsStore((s) => s.quoteRefreshMs)
+  const interval = effectiveInterval(quoteRefreshMs)
 
   const quotesState = usePolling<Quote[]>(
     () => (stockSymbols.length ? api.quotes(stockSymbols) : Promise.resolve([])),

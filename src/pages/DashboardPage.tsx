@@ -9,10 +9,10 @@ const { Paragraph, Text } = Typography
 
 const STAGES = [
   { key: 'Phase 1', title: '基础框架', desc: 'Tauri 2 三端骨架 · FastAPI 服务 · SQLite 存储 · 导航与主题', done: true },
-  { key: 'Phase 2', title: '数据中心', desc: 'AkShare 接入 · 行情看板 · K线/净值图 · 自选管理', done: false },
-  { key: 'Phase 3', title: '策略与回测', desc: '指标库 · 策略模板 · 回测引擎 · 绩效分析 · 参数优化', done: false },
-  { key: 'Phase 4', title: '基金 · 实盘 · 风控', desc: '基金分析 · 交易网关 · 条件单 · 风控 · 本地通知', done: false },
-  { key: 'Phase 5', title: '优化完善', desc: '性能 · 体验 · 交易日志 · 行情自动更新', done: false },
+  { key: 'Phase 2', title: '数据中心', desc: 'AkShare 接入 · 行情看板 · K线/净值图 · 自选管理', done: true },
+  { key: 'Phase 3', title: '策略与回测', desc: '指标库 · 策略模板 · 回测引擎 · 绩效分析 · 参数优化', done: true },
+  { key: 'Phase 4', title: '交易与风控', desc: '交易网关 · 风控引擎 · 条件单 · 交易日志', done: true },
+  { key: 'Phase 5', title: '优化完善', desc: '性能 · 体验 · 交易日志页 · 行情自动更新', done: true },
 ]
 
 export default function DashboardPage() {

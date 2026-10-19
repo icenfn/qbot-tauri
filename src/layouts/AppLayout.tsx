@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Layout, Menu, Segmented, Space, Tooltip, Tag, Button } from 'antd'
 import {
+  HistoryOutlined,
   AppstoreOutlined,
   LineChartOutlined,
   ExperimentOutlined,
@@ -30,6 +31,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'market', path: '/market', label: '行情中心', shortLabel: '行情', icon: <LineChartOutlined /> },
   { key: 'backtest', path: '/backtest', label: '策略回测', shortLabel: '回测', icon: <ExperimentOutlined /> },
   { key: 'trade', path: '/trade', label: '交易中心', shortLabel: '交易', icon: <SwapOutlined /> },
+  { key: 'trade-log', path: '/trade-log', label: '交易日志', shortLabel: '日志', icon: <HistoryOutlined /> },
   { key: 'fund', path: '/fund', label: '基金分析', shortLabel: '基金', icon: <FundOutlined /> },
   { key: 'settings', path: '/settings', label: '设置', shortLabel: '设置', icon: <SettingOutlined /> },
 ]
